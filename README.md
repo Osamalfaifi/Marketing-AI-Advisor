@@ -21,7 +21,7 @@ This Streamlit-based web application leverages advanced NLP and AI to provide in
 
 To run this application locally, clone the repository and install the required dependencies:
 
-git clone https://your-repository-url
-cd your-repository-directory
-pip install -r requirements.txt
-Then, launch the application:
+- git clone https://your-repository-url
+- cd your-repository-directory
+- pip install -r requirements.txt
+- Launch the application: streamlit run app.py
