@@ -6,4 +6,3 @@ python-dotenv==1.0.1
 streamlit==1.30.0
 chromadb==0.3.29
 beautifulsoup4==4.12.2
-sqlite3 ==3.45.2
