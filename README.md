@@ -40,7 +40,7 @@ This Streamlit-based web application leverages advanced NLP and AI to provide in
    - The final output is the answer to the query about the website, formulated based on the most relevant text chunks retrieved and processed by the language model.
 
 ![Solution Architecture](docs/Marketing-Project-Report.png)
-![Solution Developed Website](https://marketing-ai-advisor.streamlit.app/)
+![Solution Website](https://marketing-ai-advisor.streamlit.app/)
 
 ## Installation
 
