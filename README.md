@@ -42,9 +42,33 @@ This Streamlit-based web application leverages advanced NLP and AI to provide in
 ![Solution Architecture](docs/Marketing-Project-Report.png)
 
 ## Installation
-To run this application locally, clone the repository and install the required dependencies:
-- ```get your openAI key: (https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key)```
-- ```git clone Osamalfaifi/Marketing-AI-Advisor```
-- ```cd your-repository-directory```
-- ```pip install -r requirements.txt```
-- ```streamlit run app.py```
+
+Follow these steps to run this application locally:
+1. **Obtain an OpenAI API Key**:
+   - Secure your OpenAI API key by visiting [OpenAI API Key Documentation](https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key).
+
+2. **Clone the Repository**:
+   - Clone the repository using the following Git command:
+     ```
+     git clone https://github.com/Osamalfaifi/Marketing-AI-Advisor
+     ```
+
+3. **Navigate to the Repository Directory**:
+   - Change to the directory of the cloned repository:
+     ```
+     cd Marketing-AI-Advisor
+     ```
+
+4. **Install Required Dependencies**:
+   - Install all necessary dependencies from the requirements file:
+     ```
+     pip install -r requirements.txt
+     ```
+
+5. **Run the Application**:
+   - Launch the application using Streamlit:
+     ```
+     streamlit run app.py
+     ```
+     
+Make sure you have Python and pip installed on your system to execute these steps. For any issues during installation, refer to the [Troubleshooting Guide](#troubleshooting) or open an issue on GitHub.
