@@ -12,38 +12,34 @@ This Streamlit-based web application leverages advanced NLP and AI to provide in
 
 ## How It Works
 
-# Article Selection and Analysis Workflow
+1. **Article Selection**:
+   - The process begins with scraping article data from a website using WebBaseLoader, a tool from Langchain that extracts data from HTML and XML files. It parses the raw HTML content into a more manageable form.
 
-## Article Selection
-The process begins with scraping article data from a website. We utilize WebBaseLoader, a tool from Langchain, to extract data from HTML and XML files. It parses the raw HTML content of the website into a more manageable form.
+2. **Text-Splitting**:
+   - After scraping, the text data is divided into smaller chunks or documents using the Recursive Character Text Splitter. This segmentation is a critical step in Natural Language Processing (NLP) for managing data more efficiently.
 
-## Text-Splitting
-After scraping, the text data is divided into smaller chunks or documents using the Recursive Character Text Splitter. This segmentation is crucial for managing the data more efficiently and is a critical step in Natural Language Processing (NLP).
+3. **Vectorization**:
+   - Each text chunk is transformed into numerical format known as embeddings. These vectors represent the semantic meaning of the text, facilitating further processing.
 
-## Vectorization
-Each chunk of text is transformed into a numerical format known as embeddings. These vector representations capture the semantic meaning of the text, enabling further processing.
+4. **Vector Database**:
+   - The embeddings are stored in a vector database optimized for high-speed vector searches, crucial for the semantic search phase.
 
-## Vector Database
-The generated embeddings are stored in a vector database. This database is specifically optimized for high-speed vector searches, crucial for the semantic search phase.
+5. **Question Embedding**:
+   - Questions like "What is this article mostly about?" are converted into vectors using a similar process to text data vectorization. This allows for comparisons with other vectors in the database.
 
-## Question Embedding
-In the interface, a question like "What is this article mostly about?" is embedded using a similar vectorization process as the text data. This converts the question into a vector, allowing it to be compared with other vectors in the database.
+6. **Semantic Search**:
+   - The embedded question is used to perform a semantic search in the vector database. This search identifies the text chunks that are most similar to the question vector.
 
-## Semantic Search
-The embedded question is then used to perform a semantic search within the vector database. This search identifies the vectors (text chunks) that are most similar or relevant to the question vector.
+7. **Retrieval of Information**:
+   - **Ranked Results**: Results from the semantic search are ranked based on their relevance to the query, aiding in identifying the most informative text chunks.
 
-## Retrieval of Information
-### Ranked Results
-The results from the semantic search are ranked based on their relevance to the query. This ranking is pivotal in determining which chunks of text are most likely to contain the answer to the user's question.
+8. **Answer Generation**:
+   - A Large Language Model uses the ranked results to generate a coherent and contextually appropriate answer.
 
-## Answer Generation
-A Large Language Model uses the ranked results to generate a coherent and contextually appropriate answer.
+9. **Conclusion**:
+   - The final output is the answer to the query about the website, formulated based on the most relevant text chunks retrieved and processed by the language model.
 
-## Conclusion
-The final output is the answer to the query about the website, formulated based on the most relevant text chunks retrieved and processed by the language model.
-
-
-![Solution Architecture](docs/Marketing Project Report.png)
+![Solution Architecture](docs/Marketing-Project-Report.png)
 
 ## Installation
 To run this application locally, clone the repository and install the required dependencies:
