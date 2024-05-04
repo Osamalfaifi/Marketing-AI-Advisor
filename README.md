@@ -40,6 +40,7 @@ This Streamlit-based web application leverages advanced NLP and AI to provide in
    - The final output is the answer to the query about the website, formulated based on the most relevant text chunks retrieved and processed by the language model.
 
 ![Solution Architecture](docs/Marketing-Project-Report.png)
+![Solution Developed Website](https://marketing-ai-advisor.streamlit.app/)
 
 ## Installation
 
@@ -70,5 +71,5 @@ Follow these steps to run this application locally:
      ```
      streamlit run app.py
      ```
-     
+
 Make sure you have Python and pip installed on your system to execute these steps. For any issues during installation, refer to the [Troubleshooting Guide](#troubleshooting) or open an issue on GitHub.
