@@ -43,7 +43,7 @@ This Streamlit-based web application leverages advanced NLP and AI to provide in
 
 ## Installation
 To run this application locally, clone the repository and install the required dependencies:
-- ```get your openAI key: https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key```
+- ```get your openAI key: (https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key)```
 - ```git clone Osamalfaifi/Marketing-AI-Advisor```
 - ```cd your-repository-directory```
 - ```pip install -r requirements.txt```
