@@ -40,7 +40,7 @@ This Streamlit-based web application leverages advanced NLP, LLMs, and AI-driven
    - Offers adjustable parameters like model temperature and context length to tailor the interaction experience.
 
 ![Solution Architecture](docs/NewsK%20AI%20Advisor%20-%20Architecture.png)
-![Solution Website](https://newsK-ai-advisor.streamlit.app/)
+[Solution Website](https://newsK-ai-advisor.streamlit.app/)
 
 ## Application Configuration
 
