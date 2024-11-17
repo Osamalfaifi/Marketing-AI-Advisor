@@ -1,99 +1,177 @@
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 import streamlit as st
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.llms import Ollama
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
+import torch
 
-def get_vectorstore_from_url(url, api_key):
-    # Load web document using the specified URL
-    loader = WebBaseLoader(url)
-    document = loader.load()
-    
-    # Split the document into chunks using Recursive Character Text Splitter
-    text_splitter = RecursiveCharacterTextSplitter()
-    document_chunks = text_splitter.split_documents(document)
-    
-    # Create vector store for each chunk using Chroma and OpenAI embeddings
-    vector_store = Chroma.from_documents(document_chunks, OpenAIEmbeddings(api_key=api_key))
-    return vector_store
+# Configure device for optimal performance on M1
+device = "mps" if torch.backends.mps.is_available() else "cpu"
+
+def initialize_embeddings():
+    return HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        model_kwargs={'device': device},
+        encode_kwargs={'device': device, 'batch_size': 32}
+    )
+
+def get_vectorstore_from_url(url):
+    try:
+        loader = WebBaseLoader(url)
+        document = loader.load()
+        
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=500,
+            chunk_overlap=50,
+            length_function=len
+        )
+        document_chunks = text_splitter.split_documents(document)
+        # Initialize embeddings silently
+        embeddings = initialize_embeddings()
+        
+        vector_store = FAISS.from_documents(
+            document_chunks, 
+            embeddings
+        )
+        return vector_store
+    except Exception:
+        return None
+
+@st.cache_resource
+def get_llm():
+    try:
+        return Ollama(
+            model="llama3:latest",
+            temperature=0.7,
+            num_ctx=4096,
+            num_gpu=1,
+            num_thread=4
+        )
+    except Exception:
+        return None
 
 def get_context_retriever_chain(vector_store):
-    # Set up the LLM (Large Language Model) and the retriever with the given vector store
-    llm = ChatOpenAI()
-    retriever = vector_store.as_retriever()
-    # Define prompt for the chat interaction
+    llm = get_llm()
+    if not llm:
+        return None
+        
+    retriever = vector_store.as_retriever(
+        search_kwargs={"k": 3}
+    )
+    
     prompt = ChatPromptTemplate.from_messages([
         MessagesPlaceholder(variable_name="chat_history"),
         ("user", "{input}"),
         ("user", "Given the article you added, can you tell me more about it?"),
     ])
-    # Create and return a history-aware retriever chain
+    
     retriever_chain = create_history_aware_retriever(llm, retriever, prompt)
     return retriever_chain
 
 def get_conversational_rag_chain(retriever_chain):
-    # Reuse LLM and define a new prompt for document-based questions
-    llm = ChatOpenAI()
+    llm = get_llm()
+    if not llm or not retriever_chain:
+        return None
+        
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "Answer the following questions based on the article added:\n\n{context}"),
+        ("system", "You are a helpful AI assistant analyzing articles. Provide clear, concise answers based on the article content.\n\n{context}"),
         MessagesPlaceholder(variable_name="chat_history"),
         ("user", "{input}"),
     ])
-    stuff_documents_chain = create_stuff_documents_chain(llm, prompt)
     
-    # Create and return the full retrieval chain integrating document retrieval
+    stuff_documents_chain = create_stuff_documents_chain(llm, prompt)
     return create_retrieval_chain(retriever_chain, stuff_documents_chain)
 
-def get_response(user_query):
-    # Retrieve response using the established conversational chain
-    retriever_chain = get_context_retriever_chain(st.session_state.vector_store)
-    conversational_rag_chain = get_conversational_rag_chain(retriever_chain)
-    response = conversational_rag_chain.invoke({
-        "chat_history": st.session_state.chat_history,
-        "input": user_query,
-    })
-    return response['answer']
+def process_query(user_query, vector_store, chat_history):
+    try:
+        retriever_chain = get_context_retriever_chain(vector_store)
+        if not retriever_chain:
+            return "I'm having trouble processing your request at the moment. Please try again later."
+            
+        conversational_rag_chain = get_conversational_rag_chain(retriever_chain)
+        if not conversational_rag_chain:
+            return "I'm having trouble processing your request at the moment. Please try again later."
+            
+        response = conversational_rag_chain.invoke({
+            "chat_history": chat_history,
+            "input": user_query,
+        })
+        return response['answer']
+    except Exception:
+        return "I'm having trouble generating a response. Please try again later."
 
 # App configuration
-st.set_page_config(page_title="Marketing AI Advisor", page_icon="📈")
-st.title("Marketing AI Advisor 🎯")
+st.set_page_config(
+    page_title="NewsK AI Advisor",
+    page_icon="📈",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Apply dark mode styling
+st.markdown(
+    """
+    <style>
+    .main {
+        background-color: #1E1E1E;
+        color: #FFFFFF;
+    }
+    .stSidebar {
+        background-color: #121212;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.title("NewsK AI Advisor 🎯")
 
 # App sidebar for user input
 with st.sidebar:
     st.header("Settings")
     website_url = st.text_input("Article URL")
-    api_key = st.text_input("Enter your OpenAI API key", type='password')
 
 # Process and interaction handling
-if website_url and api_key:
-    # Initialize chat history if not already done
+if website_url:
+    # Initialize chat history
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = [
-            AIMessage(content="Hello! I'm your Marketing AI Advisor. How can I help you today? 🤖"),
+            AIMessage(content="Hello! I'm your NewsK AI Advisor. How can I help you today? 🤖"),
         ]
-    # Retrieve or create vector store for the URL provided
+    
+    # Initialize or retrieve vector store
     if "vector_store" not in st.session_state:
-        st.session_state.vector_store = get_vectorstore_from_url(website_url, api_key)
-        
-    # Handle user queries about the article
-    user_query = st.chat_input("Ask me anything about the article that you added...")
-    if user_query:
-        response = get_response(user_query)
-        st.session_state.chat_history.append(HumanMessage(content=user_query))
-        st.session_state.chat_history.append(AIMessage(content=response))
-        
-    # Display the conversation history
-    for message in st.session_state.chat_history:
-        if isinstance(message, AIMessage):
-            with st.chat_message("AI"):
-                st.write(message.content)
-        elif isinstance(message, HumanMessage):
-            with st.chat_message("Human"):
+        with st.spinner("Processing article... This may take a moment."):
+            st.session_state.vector_store = get_vectorstore_from_url(website_url)
+            if st.session_state.vector_store:
+                st.success("Article processed successfully!")
+            else:
+                st.error("Failed to process article. Please check the URL and try again.")
+    
+    # Handle user queries
+    if st.session_state.get("vector_store"):
+        user_query = st.chat_input("Ask me anything about the article...")
+        if user_query:
+            with st.spinner("Thinking..."):
+                response = process_query(
+                    user_query, 
+                    st.session_state.vector_store, 
+                    st.session_state.chat_history
+                )
+            st.session_state.chat_history.append(HumanMessage(content=user_query))
+            st.session_state.chat_history.append(AIMessage(content=response))
+            
+        # Display conversation history
+        for message in st.session_state.chat_history:
+            with st.chat_message("AI" if isinstance(message, AIMessage) else "Human"):
                 st.write(message.content)
 else:
-    # Prompt user to input required settings if missing
-    st.info("Please enter both a valid article URL and an OpenAI API key.")
+    st.info("Please enter a valid article URL to begin.")

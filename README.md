@@ -1,74 +1,62 @@
-# Marketing AI Advisor 🎯
+# NewsK AI Advisor 🎯
 
-This Streamlit-based web application leverages advanced NLP and AI to provide insightful analysis and responses based on marketing-related articles. Using the power of LangChain and OpenAI's technologies, it creates an interactive AI assistant that can dissect and discuss the contents of any marketing article you provide.
+This Streamlit-based web application leverages advanced NLP, LLMs, and AI-driven contextual retrieval to analyze and provide insightful responses based on articles, enhancing user engagement and content exploration. Using the LangChain framework, Hugging Face embeddings, FAISS vector stores, and the Ollama LLM, it enables a conversational experience centered around article content, perfect for personalized recommendations and in-depth analysis.
 
 ## Features
 
-- **Article Analysis**: Input the URL of a marketing article, and the app will analyze its content to understand the context and key points.
-- **Interactive AI Conversation**: Engage in a dynamic conversation with the AI about the article's content, asking any questions to deepen your understanding or gain additional insights.
-- **Contextual Understanding**: The AI retains context from the article and your questions, allowing for a coherent and contextually aware dialogue.
-- **Vector Store Creation**: The app breaks down the article into manageable chunks and creates a vector store using `Chroma` for efficient retrieval and analysis.
-- **Retrieval Chains**: Utilizes LangChain's retrieval chains to fetch relevant information and generate responses based on the article's context and user queries.
+- **Article Analysis**: Input the URL of an article, and the app will fetch, process, and analyze its content to create context-aware responses.
+- **Interactive AI Conversation**: Engage in dynamic conversations with an AI advisor about the article's content, asking questions to gain further insights and understanding.
+- **Contextual Memory**: The AI retains the context of your queries, allowing for a coherent dialogue that builds on previous interactions.
+- **Vector Store Creation with FAISS**: Efficiently stores and retrieves text embeddings using FAISS, enabling semantic search and rapid responses.
+- **Retrieval Chains**: Utilizes LangChain's retrieval chains to fetch relevant information and generate insightful, context-aware answers.
+- **Ollama LLM Integration**: Leverages the capabilities of the Ollama LLM to generate high-quality, contextually aware responses, tailored to user queries.
+![Solution](docs/NewsK AI Advisor - Solution.png)
 
 ## How It Works
 
-1. **Article Selection**:
-   - The process begins with scraping article data from a website using WebBaseLoader, a tool from Langchain that extracts data from HTML and XML files. It parses the raw HTML content into a more manageable form.
+1. **Article Retrieval**:
+   - The app uses `WebBaseLoader` from LangChain to scrape data from the provided article URL, extracting and preparing it for analysis.
 
-2. **Text-Splitting**:
-   - After scraping, the text data is divided into smaller chunks or documents using the Recursive Character Text Splitter. This segmentation is a critical step in Natural Language Processing (NLP) for managing data more efficiently.
+2. **Text Splitting**:
+   - The content is segmented into smaller chunks using the `RecursiveCharacterTextSplitter` for efficient processing and retrieval.
 
-3. **Vectorization**:
-   - Each text chunk is transformed into numerical format known as embeddings. These vectors represent the semantic meaning of the text, facilitating further processing.
+3. **Embeddings and Vectorization**:
+   - Text chunks are converted into embeddings using the Hugging Face model `sentence-transformers/all-MiniLM-L6-v2`. This step converts text into numerical representations that capture semantic meaning.
 
-4. **Vector Database**:
-   - The embeddings are stored in a vector database optimized for high-speed vector searches, crucial for the semantic search phase.
+4. **Vector Store Creation**:
+   - The embeddings are stored in a FAISS vector store, optimized for high-speed similarity searches during user queries.
 
-5. **Question Embedding**:
-   - Questions like "What is this article mostly about?" are converted into vectors using a similar process to text data vectorization. This allows for comparisons with other vectors in the database.
+5. **Interactive Conversations**:
+   - User inputs are vectorized and compared with stored embeddings to find relevant information. The LangChain retrieval chains, coupled with context-aware prompts and the Ollama LLM, generate responses.
 
-6. **Semantic Search**:
-   - The embedded question is used to perform a semantic search in the vector database. This search identifies the text chunks that are most similar to the question vector.
+6. **Conversational History**:
+   - The AI maintains conversational history to provide consistent, contextually relevant answers and engage in meaningful dialogue.
 
-7. **Retrieval of Information**:
-   - **Ranked Results**: Results from the semantic search are ranked based on their relevance to the query, aiding in identifying the most informative text chunks.
+7. **Ollama LLM Configuration**:
+   - The application integrates the Ollama LLM, configured with customizable parameters like temperature, context length, and multi-threading, to optimize response generation.
 
-8. **Answer Generation**:
-   - A Large Language Model uses the ranked results to generate a coherent and contextually appropriate answer.
+8. **Customization Options**:
+   - Offers adjustable parameters like model temperature and context length to tailor the interaction experience.
 
-9. **Conclusion**:
-   - The final output is the answer to the query about the website, formulated based on the most relevant text chunks retrieved and processed by the language model.
+![Solution Architecture](docs/NewsK AI Advisor - Architecture.png)
+![Solution Website](https://newsK-ai-advisor.streamlit.app/)
 
-![Solution Architecture](docs/Marketing-Project-Report.png)
-[Solution Website](https://marketing-ai-advisor.streamlit.app/)
-## Installation
+## Application Configuration
 
-Follow these steps to run this application locally:
-1. **Obtain an OpenAI API Key**:
-   - Secure your OpenAI API key by visiting [OpenAI API Key Documentation](https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key).
+- **Page Setup**: The app has a sleek UI with dark mode styling, providing an optimal user experience.
+- **Device Optimization**: It utilizes `torch` with M1 chip optimization, ensuring high performance on compatible Apple devices.
 
-2. **Clone the Repository**:
-   - Clone the repository using the following Git command:
-     ```
-     git clone https://github.com/Osamalfaifi/Marketing-AI-Advisor
-     ```
+## Installation and Setup
 
-3. **Navigate to the Repository Directory**:
-   - Change to the directory of the cloned repository:
-     ```
-     cd Marketing-AI-Advisor
-     ```
+### Prerequisites
 
-4. **Install Required Dependencies**:
-   - Install all necessary dependencies from the requirements file:
-     ```
-     pip install -r requirements.txt
-     ```
+- Python 3.7 or higher
+- Streamlit
+- Required libraries specified in `requirements.txt`
 
-5. **Run the Application**:
-   - Launch the application using Streamlit:
-     ```
-     streamlit run app.py
-     ```
+### Installation Steps
 
-Make sure you have Python and pip installed on your system to execute these steps. For any issues during installation, refer to the [Troubleshooting Guide](#troubleshooting) or open an issue on GitHub.
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Osamalfaifi/NewsK-AI-Advisor
+   cd NewsK-AI-Advisor
