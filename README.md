@@ -10,7 +10,8 @@ This Streamlit-based web application leverages advanced NLP, LLMs, and AI-driven
 - **Vector Store Creation with FAISS**: Efficiently stores and retrieves text embeddings using FAISS, enabling semantic search and rapid responses.
 - **Retrieval Chains**: Utilizes LangChain's retrieval chains to fetch relevant information and generate insightful, context-aware answers.
 - **Ollama LLM Integration**: Leverages the capabilities of the Ollama LLM to generate high-quality, contextually aware responses, tailored to user queries.
-![Solution](docs/NewsK AI Advisor - Solution.png)
+![Solution](docs/NewsK%20AI%20Advisor%20-%20Solution.png)
+
 
 ## How It Works
 
@@ -38,7 +39,7 @@ This Streamlit-based web application leverages advanced NLP, LLMs, and AI-driven
 8. **Customization Options**:
    - Offers adjustable parameters like model temperature and context length to tailor the interaction experience.
 
-![Solution Architecture](docs/NewsK AI Advisor - Architecture.png)
+![Solution Architecture](docs/NewsK%20AI%20Advisor%20-%20Architecture.png)
 ![Solution Website](https://newsK-ai-advisor.streamlit.app/)
 
 ## Application Configuration
